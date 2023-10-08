@@ -2,8 +2,25 @@ import { Container, Typography, Button, Card, CardContent, CardActions, Grid } f
 import Navbar from '../Navbar';
 import trainingImage from '../../assets/images/training-banner.png'; // Import your image here
 
+
+import { useEffect } from 'react';
+import { useAuth } from '../Authentication/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
+
 const TrainingModeLanding = () => {
 
+    const { isLoggedIn } = useAuth();
+
+    const navigateTo = useNavigate();
+
+    // Redirect if the user is logged in
+    useEffect(() => {
+        console.log(isLoggedIn);
+        if (!isLoggedIn) {
+            navigateTo('/login')
+        }
+    }, [isLoggedIn]);
     const handleStartTestClick = () => {
         console.log("Test Started");
     }

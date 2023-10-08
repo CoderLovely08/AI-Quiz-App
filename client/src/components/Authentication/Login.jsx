@@ -1,3 +1,8 @@
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+const provider = new GoogleAuthProvider();
+import { app } from "../../firebase";
+
+
 /* eslint-disable react/no-unescaped-entities */
 import { Link } from 'react-router-dom';
 import {
@@ -14,7 +19,34 @@ import loginImage from '../../assets/images/login.png'; // Import your image her
 import GoogleIcon from '../../assets/images/icons/google.png'; // Import Google Icon SVG
 import Navbar from '../Navbar';
 
+import { useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
+
+
+// Creating auth instance
+const auth = getAuth(app);
+
 const LoginPage = () => {
+
+    const { isLoggedIn, login } = useAuth();
+
+    const navigateTo = useNavigate();
+
+    // Redirect if the user is logged in
+    useEffect(() => {
+        console.log(isLoggedIn);
+        if (isLoggedIn) {
+            navigateTo('/')
+        }
+    }, [isLoggedIn]);
+
+    const handleGoogleSinginClick = () => {
+        signInWithPopup(auth, provider).then((result) => {
+            console.log(result);
+            login({ userName: result.user.displayName, userEmail: result.user.email, uId: result.user.uid });
+        })
+    }
     return (
         <>
             {/* Navbar */}
@@ -61,7 +93,7 @@ const LoginPage = () => {
                                     <IconButton>
                                         <img src={GoogleIcon} alt="Google Icon" style={{ width: '24px', height: '24px' }} />
                                     </IconButton>
-                                }>
+                                } onClick={handleGoogleSinginClick}>
                                     Login Using
                                 </Button>
                             </CardContent>
