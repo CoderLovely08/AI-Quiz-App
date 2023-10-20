@@ -11,16 +11,16 @@ import {
     CardContent,
     TextField,
     Button,
-    IconButton,
     Typography,
 } from '@mui/material';
 import registrationImage from '../../assets/images/register.png'; // Import your image here
 import GoogleIcon from '../../assets/images/icons/google.png'; // Import Google Icon SVG
-import Navbar from '../Navbar';
+import Navbar from '../Utility/Navbar';
 
 import { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { enqueueSnackbar } from "notistack";
 
 // Creating auth instance
 const auth = getAuth(app);
@@ -29,8 +29,14 @@ const RegistrationPage = () => {
     const { isLoggedIn, login } = useAuth();
 
     const handleGoogleSignUpClick = () => {
-        signInWithPopup(auth, provider).then(() => {
-            login();
+        signInWithPopup(auth, provider).then((result) => {
+            login({ userName: result.user.displayName, userEmail: result.user.email, uId: result.user.uid });
+            enqueueSnackbar("Registration Succesful!", {
+                variant: 'success',
+                autoHideDuration: 3000
+            });
+        }).catch((error) => {
+            console.error(error);
         })
     }
 
@@ -38,20 +44,18 @@ const RegistrationPage = () => {
     const handleUserRegistration = (e) => {
         e.preventDefault();
         createUserWithEmailAndPassword(auth, newUserData.email, newUserData.password)
-            .then((userCredential) => {
+            .then(() => {
                 // Signed up
                 updateProfile(auth.currentUser, {
                     displayName: newUserData.userName
-                }).then((result) => {
-                    console.log(result);
-                    const user = userCredential.user;
-                    console.log(user);
-                    alert("Registration Succesfull!");
-                    // ...
+                }).then(() => {
+                    enqueueSnackbar("Registration Succesful!", {
+                        variant: 'success',
+                        autoHideDuration: 3000
+                    });
                 }).catch((err) => {
-                    console.log(err);
+                    console.error(err);
                 });
-                // ...
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -61,13 +65,11 @@ const RegistrationPage = () => {
             });
     }
 
-    console.log(newUserData);
 
     const navigateTo = useNavigate();
 
     // Redirect if the user is logged in
     useEffect(() => {
-        console.log(isLoggedIn);
         if (isLoggedIn) {
             navigateTo('/')
         }
@@ -132,9 +134,7 @@ const RegistrationPage = () => {
                                     Already have an account? <Link to="/login">Login</Link>
                                 </Typography>
                                 <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }} endIcon={
-                                    <IconButton>
-                                        <img src={GoogleIcon} alt="Google Icon" style={{ width: '24px', height: '24px' }} />
-                                    </IconButton>
+                                    <img src={GoogleIcon} alt="Google Icon" style={{ width: '24px', height: '24px' }} />
                                 } onClick={handleGoogleSignUpClick}>
                                     Register Using
                                 </Button>

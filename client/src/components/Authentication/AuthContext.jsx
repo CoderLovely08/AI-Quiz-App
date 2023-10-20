@@ -6,6 +6,7 @@ const AuthContext = createContext();
 
 // Create the AuthProvider component
 const AuthProvider = ({ children }) => {
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
 

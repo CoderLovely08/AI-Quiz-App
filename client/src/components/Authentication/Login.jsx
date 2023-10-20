@@ -1,5 +1,6 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-const provider = new GoogleAuthProvider();
+import { getAuth, GoogleAuthProvider, GithubAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
 import { app } from "../../firebase";
 
 
@@ -12,39 +13,50 @@ import {
     CardContent,
     TextField,
     Button,
-    IconButton, // Add this import
     Typography,
 } from '@mui/material';
 import loginImage from '../../assets/images/login.png'; // Import your image here
 import GoogleIcon from '../../assets/images/icons/google.png'; // Import Google Icon SVG
-import Navbar from '../Navbar';
+import Navbar from '../Utility/Navbar';
 
-import { useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
-
+import { enqueueSnackbar } from 'notistack'
 
 // Creating auth instance
 const auth = getAuth(app);
 
 const LoginPage = () => {
 
-    const { isLoggedIn, login } = useAuth();
+    const { login } = useAuth();
+    // Redirect if the user is logged in
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            login({ userName: user.displayName, userEmail: user.email, uId: user.uid });
+            navigateTo('/')
+        }
+    });
 
     const navigateTo = useNavigate();
 
-    // Redirect if the user is logged in
-    useEffect(() => {
-        console.log(isLoggedIn);
-        if (isLoggedIn) {
-            navigateTo('/')
-        }
-    }, [isLoggedIn]);
-
     const handleGoogleSinginClick = () => {
-        signInWithPopup(auth, provider).then((result) => {
+        signInWithPopup(auth, googleProvider).then((result) => {
+            login({ userName: result.user.displayName, userEmail: result.user.email, uId: result.user.uid });
+            enqueueSnackbar("Login Successful", {
+                variant: 'success',
+                autoHideDuration: 3000
+            });
+        })
+    }
+
+    const handleGithubSinginClick = () => {
+        signInWithPopup(auth, githubProvider).then((result) => {
             console.log(result);
             login({ userName: result.user.displayName, userEmail: result.user.email, uId: result.user.uid });
+            enqueueSnackbar("Login Successful", {
+                variant: 'success',
+                autoHideDuration: 3000
+            });
         })
     }
     return (
@@ -90,11 +102,13 @@ const LoginPage = () => {
                                     Don't have an account? <Link to="/register">Register</Link>
                                 </Typography>
                                 <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }} endIcon={
-                                    <IconButton>
-                                        <img src={GoogleIcon} alt="Google Icon" style={{ width: '24px', height: '24px' }} />
-                                    </IconButton>
+                                    <img src={GoogleIcon} alt="Google Icon" style={{ width: '24px', height: '24px' }} />
                                 } onClick={handleGoogleSinginClick}>
                                     Login Using
+                                </Button>
+                                <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}
+                                    onClick={handleGithubSinginClick}>
+                                    Github
                                 </Button>
                             </CardContent>
                         </Grid>
