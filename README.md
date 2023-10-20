@@ -38,13 +38,13 @@ To install the Quiz Application, follow these steps:
 1. Clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/CoderLovley08/quiz-application.git
+git clone https://github.com/CoderLovely08/AI-Quiz-App.git
 ```
 
 2. Navigate to the project directory:
 
 ```bash
-cd quiz-application
+cd AI-Quiz-App
 ```
 
 3. Install the dependencies:
