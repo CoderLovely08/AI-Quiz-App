@@ -126,10 +126,10 @@ router.route('/quiz/questions')
     .post(async (req, res) => {
         try {
             const { category_id, correct_option, is_training, options, question_text } = req.body;
-            
+
             // Insert the new question into the QuestionsInfo table
             const result = await addQuestionWithOptions(question_text, category_id, is_training, options, correct_option);
-            
+
             res.json({
                 statusCode: 201,
                 message: 'Question added successfully'
@@ -148,9 +148,19 @@ router.route('/quiz/test')
     .get(async (req, res) => {
         try {
             const result = await getAllQuestionsByMode(req.query.isTraining);
+
+            // Use Fisher-Yates shuffle algorithm to shuffle the questions
+            for (let i = result.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [result[i], result[j]] = [result[j], result[i]];
+            }
+
+            // Get the first 30 questions
+            const selectedQuestions = result.slice(0, 30);
+
             const questionMap = new Map();
 
-            result.forEach(item => {
+            selectedQuestions.forEach(item => {
                 const { question_id, option_id, option_text } = item;
 
                 if (questionMap.has(question_id)) {
@@ -177,7 +187,10 @@ router.route('/quiz/test')
             const output = [...questionMap.values()];
             res.json(output);
         } catch (error) {
-
+            console.error(`Error in /quiz/test GET request: ${error}`);
+            res.status(500).json({
+                message: "Internal Server Error."
+            });
         }
     })
     .post(async (req, res) => {
