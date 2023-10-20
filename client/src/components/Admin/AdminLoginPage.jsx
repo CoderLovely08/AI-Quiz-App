@@ -30,6 +30,8 @@ import { useNavigate } from 'react-router-dom';
 // Import Axios for HTTP requests
 import Axios from 'axios'
 
+const ADMIN_LOGIN_URL = 'http://localhost:3000/admin/login'
+
 const AdminLoginPage = () => {
     const { isLoggedIn, login } = useAuth();
 
@@ -61,7 +63,7 @@ const AdminLoginPage = () => {
         setLoading(true);
         console.log(formData);
         try {
-            const response = await Axios.post('http://localhost:3000/admin/login', {
+            const response = await Axios.post(ADMIN_LOGIN_URL, {
                 username: formData.username,
                 password: formData.password
             });

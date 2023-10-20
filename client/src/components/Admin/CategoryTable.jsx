@@ -20,9 +20,8 @@ import {
 import axios from 'axios';
 
 
-import { fetchCategories } from './api';
-
-
+import { fetchCategories, addCategory, deleteCategory } from './api';
+import { enqueueSnackbar } from 'notistack';
 
 const CategoryTable = () => {
     const [categories, setCategories] = useState([]);
@@ -44,24 +43,55 @@ const CategoryTable = () => {
             category_name: newCategoryName,
         };
         setCategories([...categories, newCategory]);
-        const response = await axios.post('http://localhost:3000/api/quiz/category', {
-            name: newCategoryName,
-        })
 
-        if (response.data.statusCode == 201) {
+        // const response = await axios.post('http://localhost:3000/api/quiz/category', {
+        //     name: newCategoryName,
+        // })
+
+        const response = await addCategory(newCategoryName);
+
+        if (response.statusCode == 201) {
             setNewCategoryName('');
             setIsDialogOpen(false);
+            enqueueSnackbar("New category added", {
+                variant: 'success',
+                autoHideDuration: 3000
+            });
+        } else {
+            enqueueSnackbar("Unable to add category", {
+                variant: 'warning',
+                autoHideDuration: 3000
+            });
         }
     }
 
     // To delete an existing category
-    const handleDeleteCategory = (categoryId) => {
+    const handleDeleteCategory = async (categoryId) => {
         console.log(categoryId);
         const updatedCategories = categories.filter(category => category.category_id !== categoryId);
-        axios.delete('http://localhost:3000/api/quiz/category', {
-            data: { id: categoryId }
-        }).then(result => console.log(result))
-        setCategories(updatedCategories);
+
+        deleteCategory(categoryId).then((response) => {
+            if (response.statusCode === 204) {
+                enqueueSnackbar("Category deleted", {
+                    variant: 'error',
+                    autoHideDuration: 3000
+                });
+                setCategories(updatedCategories);
+            } else {
+                enqueueSnackbar("Unable to delete Category", {
+                    variant: 'warning',
+                    autoHideDuration: 3000
+                });
+            }
+        }).catch(err => {
+            enqueueSnackbar(err, {
+                variant: 'warning',
+                autoHideDuration: 3000
+            });
+        })
+        // axios.delete('http://localhost:3000/api/quiz/category', {
+        //     data: { id: categoryId }
+        // }).then(result => console.log(result))
     }
 
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);

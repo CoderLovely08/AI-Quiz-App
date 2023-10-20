@@ -18,6 +18,8 @@ import TestSummary from './TestSummary';
 import Question from './Question';
 import { enqueueSnackbar } from 'notistack';
 
+const TEST_URL = 'http://localhost:3000/api/quiz/test/'
+
 const Quiz = () => {
     const { isLoggedIn, user } = useAuth();
 
@@ -51,7 +53,7 @@ const Quiz = () => {
     const isTrainingMode = new URLSearchParams(window.location.search).get('isTrainingMode');
     useEffect(() => {
         // Fetch questions from API
-        axios.get('http://localhost:3000/api/quiz/test/', {
+        axios.get(TEST_URL, {
             params: {
                 'isTraining': isTrainingMode // Send as a custom header
             }
@@ -112,7 +114,7 @@ const Quiz = () => {
         setOpen(false);
 
         setTimeout(() => {
-            axios.post('http://localhost:3000/api/quiz/test', {
+            axios.post(TEST_URL, {
                 uId: user.uId,
                 responses: userResponsesArray
             }).then(result => {

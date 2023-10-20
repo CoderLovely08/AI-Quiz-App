@@ -254,8 +254,18 @@ import {
     Typography,
     Dialog,
     Box,
+    DialogTitle,
+    DialogContent,
+    Grid,
+    TextField,
+    FormLabel,
+    FormControl,
+    Select,
+    MenuItem,
+    DialogActions,
 } from '@mui/material';
 import axios from 'axios';
+import { enqueueSnackbar } from 'notistack';
 
 const QuestionsTable = () => {
     const [questions, setQuestions] = useState([]);
@@ -302,6 +312,10 @@ const QuestionsTable = () => {
         const response = await axios.post('http://localhost:3000/api/quiz/questions', newQuestionData);
 
         if (response.data.statusCode === 201) {
+            enqueueSnackbar("New question added", {
+                variant: 'success',
+                autoHideDuration: 3000
+            });
             setNewQuestion('');
             setOptions(['', '', '', '']);
             setCorrectOption(0);
@@ -380,7 +394,98 @@ const QuestionsTable = () => {
 
                 <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
                     <form action="" onSubmit={handleAddQuestion}>
-                        {/* ... Rest of your dialog content ... */}
+                        <DialogTitle>Add New Question</DialogTitle>
+                        <DialogContent>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        label="Question Text"
+                                        variant="standard"
+                                        fullWidth
+                                        required
+                                        value={newQuestion}
+                                        size="small"
+                                        onChange={(e) => setNewQuestion(e.target.value)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl component="fieldset" fullWidth>
+                                        <FormLabel component="legend">Options</FormLabel>
+                                        {options.map((option, index) => (
+                                            <TextField
+                                                sx={{ my: 1 }}
+                                                key={index}
+                                                label={`Option ${index + 1}`}
+                                                variant="outlined"
+                                                size="small"
+                                                fullWidth
+                                                required
+                                                value={option}
+                                                onChange={(e) => handleOptionChange(e, index)}
+                                            />
+                                        ))}
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <FormControl fullWidth>
+                                        <FormLabel>Correct Option</FormLabel>
+                                        <Select
+                                            value={correctOption}
+                                            required
+                                            label="Age"
+                                            onChange={(e) => setCorrectOption(e.target.value)}
+                                        >
+                                            {options.map((option, index) => (
+                                                <MenuItem key={index} value={index}>{`${option}`}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <FormControl fullWidth>
+                                        <FormLabel>Training Mode</FormLabel>
+                                        <Select
+                                            value={isTraining}
+                                            required
+                                            label="Training Mode"
+                                            onChange={(e) => setIsTraining(e.target.value)}
+                                        >
+                                            <MenuItem value={true}>Yes</MenuItem>
+                                            <MenuItem value={false}>No</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl fullWidth>
+                                        <FormLabel>Category</FormLabel>
+                                        <Select
+                                            value={selectedCategory}
+                                            required
+                                            label="Select Category"
+                                            onChange={(e) => setSelectedCategory(e.target.value)}
+                                        >
+                                            {categories.map(category => (
+                                                <MenuItem key={category.category_id} value={category.category_id}>
+                                                    {category.category_name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+
+                            </Grid>
+                        </DialogContent>
+
+                        <DialogActions>
+                            <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                            <Button
+                                type='submit'
+                                variant="contained"
+                                color="primary"
+                            >
+                                Add Question
+                            </Button>
+                        </DialogActions>
                     </form>
                 </Dialog>
 
