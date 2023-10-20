@@ -5,7 +5,14 @@ config()
 
 const app = express();
 
+// Import routers
+import adminRoutes from './routes/admin.js'
+import apiRoutes from './routes/api.js'
+
 app.use(cors())
+
+app.use('/admin', adminRoutes)
+app.use('/api', apiRoutes)
 
 app.get('/', async (req, res) => {
     try {
