@@ -15,7 +15,7 @@ import {
     CardActions
 } from '@mui/material';
 import banner from '../../assets/images/banner.png';
-import Navbar from '../Navbar';
+import Navbar from '../Utility/Navbar';
 
 const LandingPage = () => {
 
@@ -29,8 +29,7 @@ const LandingPage = () => {
         setOpen(false);
     };
 
-    const handleModeSelectAndClose = (mode) => {
-        console.log(mode);
+    const handleModeSelectAndClose = () => {
         setOpen(false);
     };
 
@@ -100,16 +99,18 @@ const LandingPage = () => {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button variant="contained" color="secondary" onClick={() => handleModeSelectAndClose('testing')}>
-                                        Select Testing Mode
-                                    </Button>
+                                    <Link to="/testing-test" style={{ textDecoration: 'none' }}>
+                                        <Button variant="contained" color="secondary" onClick={() => handleModeSelectAndClose('testing')}>
+                                            Select Testing Mode
+                                        </Button>
+                                    </Link>
                                 </CardActions>
                             </Card>
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button variant='contained' onClick={handleClose} color="primary">
                         Cancel
                     </Button>
                 </DialogActions>
