@@ -16,7 +16,7 @@ const TestingModeLanding = () => {
         if (!isLoggedIn) {
             enqueueSnackbar("Kidnly login to take a test", {
                 variant: 'info',
-                autoHideDuration: 1000
+                autoHideDuration: 2000
             });
             navigateTo('/login')
         }
