@@ -7,7 +7,13 @@
 3. [Requirements](#requirements)
 4. [Installation](#installation)
 5. [Usage](#usage)
-6. [Contribution](#contributing)
+6. [Random Sampling of Questions](#random-sampling-of-questions)
+   - [Fisher-Yates Shuffle Algorithm](#fisher-yates-shuffle-algorithm)
+     - [How It Works](#how-it-works)
+     - [Example Usage (JavaScript)](#example-usage-javascript)
+     - [Usage](#usage-1)
+     - [Considerations](#considerations)
+7. [Contributing](#contributing)
 
 ---
 
@@ -63,6 +69,51 @@ npm start
 
 Visit `http://localhost:3000` in your web browser to access the application.
 
+## Random Sampling of Questions
+
+### Fisher-Yates Shuffle Algorithm
+
+The Fisher-Yates Shuffle Algorithm, also known as the Knuth Shuffle, is a simple and efficient method for randomly shuffling the elements of an array. It ensures that every permutation of the elements is equally likely, making it suitable for applications where true randomness is required.
+
+#### How It Works
+
+The algorithm operates in-place, meaning it modifies the original array. Here are the basic steps:
+
+1. Start from the last element in the array.
+2. Generate a random index between 0 and the current index (inclusive).
+3. Swap the current element with the element at the randomly generated index.
+4. Move to the previous element and repeat steps 2 and 3.
+
+This process continues until you reach the first element in the array.
+
+#### Example Usage (JavaScript)
+
+```javascript
+function fisherYatesShuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+```
+
+#### Usage
+
+1. Define the `fisherYatesShuffle` function in your code or include it from a library.
+2. Call the function with an array as an argument.
+
+```javascript
+const myArray = [1, 2, 3, 4, 5];
+const shuffledArray = fisherYatesShuffle(myArray);
+console.log(shuffledArray);
+```
+
+#### Considerations
+
+- This algorithm is suitable for scenarios where true randomness is required, such as shuffling a deck of cards or randomizing quiz questions.
+- If you need to keep the original array intact, make a copy before applying the shuffle.
+
 ## Contributing
 
 Contributions are welcome! Here are some ways you can contribute:
@@ -70,3 +121,7 @@ Contributions are welcome! Here are some ways you can contribute:
 1. Fork the repository and make your changes.
 2. Create a pull request with a detailed description of your changes.
 3. Wait for your pull request to be reviewed and merged.
+
+## License
+
+This code is provided under the [MIT License](LICENSE).
