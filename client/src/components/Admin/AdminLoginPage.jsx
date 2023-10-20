@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 // Import Axios for HTTP requests
 import Axios from 'axios'
 
-const ADMIN_LOGIN_URL = 'http://localhost:3000/admin/login'
+const ADMIN_LOGIN_URL = 'https://repulsive-puce-sombrero.cyclic.app/admin/login'
 
 const AdminLoginPage = () => {
     const { isLoggedIn, login } = useAuth();

@@ -7,6 +7,7 @@ import {
     Alert,
     AlertTitle,
     Grid,
+    Box,
 } from '@mui/material';
 import Navbar from '../Utility/Navbar';
 import LoadingComponent from '../Utility/Loading';
@@ -17,8 +18,9 @@ import { ShowDialog } from '../Utility/ShowDialog';
 import TestSummary from './TestSummary';
 import Question from './Question';
 import { enqueueSnackbar } from 'notistack';
+import Countdown from '../Utility/Countdown';
 
-const TEST_URL = 'http://localhost:3000/api/quiz/test/'
+const TEST_URL = 'https://repulsive-puce-sombrero.cyclic.app/api/quiz/test/'
 
 const Quiz = () => {
     const { isLoggedIn, user } = useAuth();
@@ -50,7 +52,7 @@ const Quiz = () => {
     const [questions, setQuestions] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
-    const isTrainingMode = new URLSearchParams(window.location.search).get('isTrainingMode');
+    const isTrainingMode = (new URLSearchParams(window.location.search).get('isTrainingMode')) == 'true';
     useEffect(() => {
         // Fetch questions from API
         axios.get(TEST_URL, {
@@ -107,6 +109,24 @@ const Quiz = () => {
     const handleClose = () => {
         setOpen(false);
     };
+    const [timeInMinutes, setTimeInMinutes] = useState(30); // Set your desired time in minutes
+    const [seconds, setSeconds] = useState(timeInMinutes * 60);
+
+
+    useEffect(() => {
+        let timer = null;
+
+        if (seconds > 0) {
+            timer = setInterval(() => {
+                setSeconds(prevSeconds => prevSeconds - 1);
+            }, 1000);
+        } else {
+            handleSubmitTest();
+
+        }
+
+        return () => clearInterval(timer);
+    }, [seconds]);
 
     const handleSubmitTest = () => {
         const userResponsesArray = Array.from(userResponses);
@@ -142,6 +162,11 @@ const Quiz = () => {
             {/* Loading component */}
             {loading && <LoadingComponent open={loading} />}
 
+            {/* Countdown timer */}
+            <Box position="absolute" top={60} right={0} p={2}>
+                {(!submitted && !isTrainingMode) ? <Countdown timeInMinutes={timeInMinutes} /> : ''} {/* Set the time in minutes */}
+            </Box>
+
             {/* To submit the test and process results */}
             <ShowDialog open={open} handleClose={handleClose} handleSubmitTest={handleSubmitTest} message={"Are you sure to submit the test?"} />
 
@@ -160,6 +185,7 @@ const Quiz = () => {
                         )}
                         <Typography variant="h5" gutterBottom>
                             Question {currentQuestion + 1}
+
                         </Typography>
                         {questions.length === 0 ? (
                             <LoadingComponent open={true} />

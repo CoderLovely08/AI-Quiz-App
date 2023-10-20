@@ -112,7 +112,7 @@ const CategoryTable = () => {
         const updatedCategories = categories.map(category =>
             category.category_id === editedCategoryId ? { ...category, category_name: editedCategoryName } : category
         );
-        axios.put('http://localhost:3000/api/quiz/category', {
+        axios.put('https://repulsive-puce-sombrero.cyclic.app/api/quiz/category', {
             id: editedCategoryId,
             name: editedCategoryName,
         })

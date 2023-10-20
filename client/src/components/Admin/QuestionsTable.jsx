@@ -278,13 +278,13 @@ const QuestionsTable = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const fetchData = () => {
-        axios.get('http://localhost:3000/api/quiz/questions')
+        axios.get('https://repulsive-puce-sombrero.cyclic.app/api/quiz/questions')
             .then(result => {
                 setQuestions(result.data);
             })
             .catch(error => console.error(error));
 
-        axios.get('http://localhost:3000/api/quiz/category')
+        axios.get('https://repulsive-puce-sombrero.cyclic.app/api/quiz/category')
             .then(result => {
                 setCategories(result.data);
             })
@@ -309,7 +309,7 @@ const QuestionsTable = () => {
         };
         setQuestions([...questions, newQuestionData]);
         console.log(newQuestionData);
-        const response = await axios.post('http://localhost:3000/api/quiz/questions', newQuestionData);
+        const response = await axios.post('https://repulsive-puce-sombrero.cyclic.app/api/quiz/questions', newQuestionData);
 
         if (response.data.statusCode === 201) {
             enqueueSnackbar("New question added", {

@@ -1,7 +1,7 @@
 // api.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000/api/quiz';
+const API_BASE_URL = 'https://repulsive-puce-sombrero.cyclic.app/api/quiz';
 
 export const fetchCategories = async () => {
     try {
