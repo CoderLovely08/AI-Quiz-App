@@ -1,21 +1,17 @@
+import { useEffect } from 'react';
 import { Container, Typography, Button, Card, CardContent, CardActions, Grid } from '@mui/material';
 import Navbar from '../Utility/Navbar';
-import trainingImage from '../../assets/images/training-banner.png'; // Import your image here
 
-
-import { useEffect } from 'react';
 import { useAuth } from '../Authentication/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import trainingImage from '../../assets/images/training-banner.png'; // Import your image here
 import { enqueueSnackbar } from 'notistack';
 
-
-const TrainingModeLanding = () => {
-
+const TestingModeLanding = () => {
     const { isLoggedIn } = useAuth();
-
     const navigateTo = useNavigate();
 
-    // Redirect if the user is logged in
+    // Redirect if the user is not logged in
     useEffect(() => {
         if (!isLoggedIn) {
             enqueueSnackbar("Kidnly login to take a test", {
@@ -30,7 +26,7 @@ const TrainingModeLanding = () => {
     return (
         <>
             {/* Navbar */}
-            <Navbar></Navbar>
+            <Navbar />
 
             <Container sx={{ mt: 4 }}>
                 <Card variant="outlined">
@@ -40,31 +36,27 @@ const TrainingModeLanding = () => {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <CardContent>
-                                <Typography variant="h5" component="" gutterBottom>
-                                    Training Mode Instructions
+                                <Typography variant="h5" component="div" gutterBottom>
+                                    Testing Mode Instructions
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary">
-                                    This mode allows you to practice and improve your skills without any time constraints.
-                                    You can take your time to answer each question and review your answers at the end.
+                                    This mode allows you to test your skills with time constraints.
+                                    You can review your answers at the end.
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
                                     Additional Details:
                                 </Typography>
-                                <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+                                <Typography variant="div" color="text.secondary">
 
-                                    <li>The test will be exhaustive, meaning it will continue to send more questions until you submit the test.</li>
-                                    <li>There will be no time limit.</li>
-                                    <li>Once you are done, click on submit.</li>
-                                    <li>You can always click on view answer to check the answer for the current question.</li>
-                                    <li>No marking will be generated for the test.</li>
-                                    <li>You can appear for the test multiple times.</li>
+                                    <li>Each question carries one mark. Your progress will be analyzed.</li>
+                                    <li>The test contains 30 questions which must be completed in 30 minutes.</li>
+                                    <li>You will find the submit button on the last question, and you cannot navigate between questions.</li>
                                 </Typography>
-
                             </CardContent>
                             <CardActions>
-                                <Link to={{ pathname: '/quiz', search: '?isTrainingMode=true' }}>
-                                    <Button variant="contained" color="primary">
-                                        Start Training Test
+                                <Link to={{ pathname: '/quiz', search: '?isTrainingMode=false' }}>
+                                    <Button variant="contained" color="primary" >
+                                        Start Test
                                     </Button>
                                 </Link>
                             </CardActions>
@@ -76,4 +68,4 @@ const TrainingModeLanding = () => {
     );
 }
 
-export default TrainingModeLanding;
+export default TestingModeLanding;

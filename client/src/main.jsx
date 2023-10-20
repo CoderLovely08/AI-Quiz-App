@@ -1,12 +1,15 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import { AdminAuthProvider } from './components/Admin/AdminAuthContext.jsx';
 import { AuthProvider } from './components/Authentication/AuthContext';
+import { SnackbarProvider } from 'notistack'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <AdminAuthProvider>
     <AuthProvider>
-      <App />
+      <SnackbarProvider>
+        <App />
+      </SnackbarProvider>
     </AuthProvider>
-  </React.StrictMode>,
+  </AdminAuthProvider>
 )
