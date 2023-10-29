@@ -9,7 +9,7 @@ import pool from "./db.js";
 export const getAllCategories = async () => {
     try {
         const query = {
-            text: `SELECT * FROM "public"."QuestionCategoryInfo"`
+            text: `SELECT * FROM QuestionCategoryInfo`
         };
 
         const { rows } = await pool.query(query);
@@ -29,7 +29,7 @@ export const getAllCategories = async () => {
 export const addQuizCategory = async (name) => {
     try {
         const query = {
-            text: `INSERT INTO "public"."QuestionCategoryInfo"(category_name) VALUES ($1)`,
+            text: `INSERT INTO QuestionCategoryInfo(category_name) VALUES ($1)`,
             values: [name]
         }
         const { rowCount } = await pool.query(query);
@@ -62,7 +62,7 @@ export const updateQuizCategory = async (id, name) => {
     try {
         const query = {
             text: `
-            UPDATE "public"."QuestionCategoryInfo"
+            UPDATE QuestionCategoryInfo
             SET category_name = $2
             WHERE category_id = $1
             `,
@@ -96,7 +96,7 @@ export const deleteQuizCategory = async (id) => {
     try {
         const query = {
             text: `
-            DELETE FROM "public"."QuestionCategoryInfo"
+            DELETE FROM QuestionCategoryInfo
             WHERE category_id = $1
             `,
             values: [id]
@@ -123,10 +123,10 @@ export const getAllQuestions = async () => {
     try {
         const query = {
             text: `
-            SELECT * FROM "public"."QuestionsInfo"  qi
-            JOIN "public"."QuestionCategoryInfo" qci
+            SELECT * FROM QuestionsInfo  qi
+            JOIN QuestionCategoryInfo qci
                 ON qci.category_id = qi.category_id
-            JOIN "public"."OptionsInfo"  oi
+            JOIN OptionsInfo  oi
                 ON oi.question_id = qi.question_id
             ORDER BY qi.question_id`
         }
@@ -152,10 +152,10 @@ export const getAllQuestionsByMode = async (is_training) => {
             qi.question_text,
             oi.option_id,
             oi.option_text
-             FROM "public"."QuestionsInfo"  qi
-            JOIN "public"."QuestionCategoryInfo" qci
+             FROM QuestionsInfo  qi
+            JOIN QuestionCategoryInfo qci
                 ON qci.category_id = qi.category_id
-            JOIN "public"."OptionsInfo"  oi
+            JOIN OptionsInfo  oi
                 ON oi.question_id = qi.question_id
             WHERE qi.is_training = $1
             ORDER BY qi.question_id`,
@@ -191,7 +191,7 @@ export const addQuestionWithOptions = async (question_text, category_id, is_trai
 
         // Step 1: Insert question
         const questionResult = await client.query(`
-            INSERT INTO "public"."QuestionsInfo"(question_text, category_id, is_training)
+            INSERT INTO QuestionsInfo(question_text, category_id, is_training)
             VALUES ($1, $2, $3)
             RETURNING question_id
         `, [question_text, category_id, is_training]);
@@ -201,7 +201,7 @@ export const addQuestionWithOptions = async (question_text, category_id, is_trai
         // Step 2: Insert options
         const optionValues = options.map(option_text => [question_id, option_text, options.indexOf(option_text) === correct_option]);
         await client.query(`
-            INSERT INTO "public"."OptionsInfo"(question_id, option_text, is_correct)
+            INSERT INTO OptionsInfo(question_id, option_text, is_correct)
             VALUES ${optionValues.map((_, index) => `($${index * 3 + 1}, $${index * 3 + 2}, $${index * 3 + 3})`).join(', ')}
         `, optionValues.flat());
 
@@ -232,7 +232,7 @@ export const saveUserResponses = async (userId, responses) => {
         await client.query('BEGIN');
 
         const testIdQuery = {
-            text: `INSERT INTO "public"."TestInfo"(user_id) VALUES($1) RETURNING test_id`,
+            text: `INSERT INTO TestInfo(user_id) VALUES($1) RETURNING test_id`,
             values: [userId]
         }
 
@@ -247,7 +247,7 @@ export const saveUserResponses = async (userId, responses) => {
                 message: "Error submitting responses",
             }
         } else {
-            let query = `INSERT INTO "public"."ResponseInfo"(test_id, user_id, question_id, user_option_id) VALUES`;
+            let query = `INSERT INTO ResponseInfo(test_id, user_id, question_id, user_option_id) VALUES`;
 
             const insertValues = responses.map(response => {
                 const [questionId, optionId] = response;
@@ -272,13 +272,13 @@ export const saveUserResponses = async (userId, responses) => {
                 oi.is_correct,
                 COUNT(CASE WHEN oi.is_correct THEN 1 END) OVER() AS correct_count
                 FROM 
-                "public"."ResponseInfo" ri 
+                ResponseInfo ri 
                 JOIN 
-                "public"."OptionsInfo" oi 
+                OptionsInfo oi 
                 ON 
                 ri.user_option_id = oi.option_id
                 JOIN 
-                "public"."QuestionsInfo" qi 
+                QuestionsInfo qi 
                 ON 
                 qi.question_id = ri.question_id
                 WHERE 
@@ -309,5 +309,70 @@ export const saveUserResponses = async (userId, responses) => {
         }
     } finally {
         await client.release();
+    }
+}
+
+
+export const updateQuestionCategory = async (questionId, categoryId, questionText) => {
+    try {
+        const query = {
+            text: `
+            UPDATE QuestionsInfo 
+            SET category_id = $2, question_text = $3
+            WHERE question_id = $1
+            `,
+            values: [questionId, categoryId, questionText]
+        }
+
+        const { rowCount } = await pool.query(query);
+
+        return (rowCount == 1) ? {
+            statusCode: 200,
+            success: true,
+            message: 'Question Category updated'
+        } : {
+            statusCode: 404,
+            success: false,
+            message: 'Question Id not found'
+        }
+    } catch (error) {
+        console.error(`Error in updateQuestionCategory() call ${error}`);
+        return {
+            statusCode: 501,
+            success: false,
+            message: "Internal server error"
+        }
+    }
+}
+
+export const submitQuestionReport = async (userId, questionId, description) => {
+    try {
+        const query = {
+            text: `
+            INSERT INTO 
+            ReportsInfo(user_id, question_id, report_description)
+            VALUES($1, $2, $3)
+            `,
+            values: [userId, questionId, description]
+        }
+
+        const { rowCount } = await pool.query(query);
+
+        return rowCount == 1 ? {
+            statusCode: 201,
+            success: true,
+            message: 'Report submitted successfully'
+        } : {
+            statusCode: 400,
+            success: false,
+            message: 'Unable to submit report'
+        }
+    } catch (error) {
+        console.error(`Error in submitQuestionReport() call ${error}`);
+        return {
+            statusCode: 501,
+            success: false,
+            message: "Internal server error"
+        }
     }
 }

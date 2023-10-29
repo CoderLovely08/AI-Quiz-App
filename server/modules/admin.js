@@ -12,7 +12,7 @@ export const authenticateAdminCredentials = async (username, password) => {
         const query = {
             text: `
                 SELECT admin_id, admin_name
-                FROM "public"."AdminInfo"
+                FROM AdminInfo
                 WHERE 
                     admin_user_name = $1
                 AND admin_password = $2
