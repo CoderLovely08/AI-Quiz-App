@@ -30,9 +30,7 @@ import { useNavigate } from 'react-router-dom';
 // Import Axios for HTTP requests
 import Axios from 'axios'
 import { enqueueSnackbar } from 'notistack';
-
-// const ADMIN_LOGIN_URL = 'https://repulsive-puce-sombrero.cyclic.app/admin/login'
-const ADMIN_LOGIN_URL = 'http://localhost:3000/admin/login'
+import { BASE_URL } from '../service/data';
 
 const AdminLoginPage = () => {
     const { isLoggedIn, login } = useAuth();
@@ -63,7 +61,7 @@ const AdminLoginPage = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await Axios.post(ADMIN_LOGIN_URL, {
+            const response = await Axios.post(BASE_URL + '/admin/login', {
                 username: formData.username,
                 password: formData.password
             });
@@ -80,6 +78,10 @@ const AdminLoginPage = () => {
             });
         } catch (error) {
             console.error(error);
+            enqueueSnackbar(error.message, {
+                variant: 'error',
+                autoHideDuration: 3000
+            });
         } finally {
             setLoading(false);
         }

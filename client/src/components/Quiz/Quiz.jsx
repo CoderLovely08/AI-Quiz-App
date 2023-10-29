@@ -21,6 +21,7 @@ import { enqueueSnackbar } from 'notistack';
 import Countdown from '../Utility/Countdown';
 import TabChangeNotifier from './TabChangeNotifier';
 import ReportButton from './ReportButton';
+import { BASE_URL } from '../service/data';
 
 // const TEST_URL = 'https://repulsive-puce-sombrero.cyclic.app/api/quiz/test/'
 const TEST_URL = 'http://localhost:3000/api/quiz/test/'
@@ -58,7 +59,7 @@ const Quiz = () => {
     const isTrainingMode = (new URLSearchParams(window.location.search).get('isTrainingMode')) == 'true';
     useEffect(() => {
         // Fetch questions from API
-        axios.get(TEST_URL, {
+        axios.get(BASE_URL + '/quiz/test/', {
             params: {
                 'isTraining': isTrainingMode // Send as a custom header
             }
@@ -167,7 +168,7 @@ const Quiz = () => {
             {loading && <LoadingComponent open={loading} />}
 
             {/* Countdown timer */}
-            <Box sx={{m:1, display: 'flex', justifyContent: 'center'}} >
+            <Box sx={{ m: 1, display: 'flex', justifyContent: 'center' }} >
                 {(!submitted && !isTrainingMode) ? <Countdown timeInMinutes={timeInMinutes} /> : ''} {/* Set the time in minutes */}
             </Box>
 
