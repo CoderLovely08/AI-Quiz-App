@@ -11,7 +11,7 @@ import apiRoutes from './routes/api.js'
 
 app.use(cors())
 
-app.use('/admin', adminRoutes)
+app.use('/api/admin', adminRoutes)
 app.use('/api', apiRoutes)
 
 app.get('/', async (req, res) => {
