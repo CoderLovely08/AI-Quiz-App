@@ -29,8 +29,10 @@ import { useNavigate } from 'react-router-dom';
 
 // Import Axios for HTTP requests
 import Axios from 'axios'
+import { enqueueSnackbar } from 'notistack';
 
-const ADMIN_LOGIN_URL = 'https://repulsive-puce-sombrero.cyclic.app/admin/login'
+// const ADMIN_LOGIN_URL = 'https://repulsive-puce-sombrero.cyclic.app/admin/login'
+const ADMIN_LOGIN_URL = 'http://localhost:3000/admin/login'
 
 const AdminLoginPage = () => {
     const { isLoggedIn, login } = useAuth();
@@ -39,7 +41,6 @@ const AdminLoginPage = () => {
 
     // Redirect if the user is logged in
     useEffect(() => {
-        console.log(isLoggedIn);
         if (isLoggedIn) {
             navigateTo('/admin/home')
         }
@@ -61,7 +62,6 @@ const AdminLoginPage = () => {
     const handleAdminLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log(formData);
         try {
             const response = await Axios.post(ADMIN_LOGIN_URL, {
                 username: formData.username,
@@ -74,7 +74,10 @@ const AdminLoginPage = () => {
                     userName: response.data.admin_name
                 })
             }
-            alert(response.data.message);
+            enqueueSnackbar(response.data.message, {
+                variant: response.data.statusCode == 200 ? 'success' : 'error',
+                autoHideDuration: 3000
+            });
         } catch (error) {
             console.error(error);
         } finally {
@@ -84,6 +87,7 @@ const AdminLoginPage = () => {
 
     return (
         <>
+            {loading && <LoadingComponent open={loading} />} {/* Use the LoadingComponent */}
             <Navbar />
             <Container sx={{ mt: 4 }}>
                 <Card variant='outlined'>
@@ -125,8 +129,6 @@ const AdminLoginPage = () => {
                                     <Button variant="contained" color="primary" fullWidth type="submit" sx={{ mt: 2 }}>
                                         Login
                                     </Button>
-
-                                    {loading && <LoadingComponent />} {/* Use the LoadingComponent */}
                                 </form>
                                 <Typography variant="body1" mt={2} textAlign="center">
                                     <Link to="/forgot-password">Forgot Password?</Link>

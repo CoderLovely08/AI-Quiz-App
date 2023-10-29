@@ -22,6 +22,7 @@ import axios from 'axios';
 
 import { fetchCategories, addCategory, deleteCategory } from './api';
 import { enqueueSnackbar } from 'notistack';
+import { BASE_URL } from '../service/data';
 
 const CategoryTable = () => {
     const [categories, setCategories] = useState([]);
@@ -44,10 +45,6 @@ const CategoryTable = () => {
         };
         setCategories([...categories, newCategory]);
 
-        // const response = await axios.post('http://localhost:3000/api/quiz/category', {
-        //     name: newCategoryName,
-        // })
-
         const response = await addCategory(newCategoryName);
 
         if (response.statusCode == 201) {
@@ -67,7 +64,7 @@ const CategoryTable = () => {
 
     // To delete an existing category
     const handleDeleteCategory = async (categoryId) => {
-        console.log(categoryId);
+
         const updatedCategories = categories.filter(category => category.category_id !== categoryId);
 
         deleteCategory(categoryId).then((response) => {
@@ -89,9 +86,6 @@ const CategoryTable = () => {
                 autoHideDuration: 3000
             });
         })
-        // axios.delete('http://localhost:3000/api/quiz/category', {
-        //     data: { id: categoryId }
-        // }).then(result => console.log(result))
     }
 
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -112,7 +106,7 @@ const CategoryTable = () => {
         const updatedCategories = categories.map(category =>
             category.category_id === editedCategoryId ? { ...category, category_name: editedCategoryName } : category
         );
-        axios.put('https://repulsive-puce-sombrero.cyclic.app/api/quiz/category', {
+        axios.put(BASE_URL + '/quiz/category', {
             id: editedCategoryId,
             name: editedCategoryName,
         })

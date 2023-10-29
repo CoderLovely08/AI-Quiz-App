@@ -19,8 +19,11 @@ import TestSummary from './TestSummary';
 import Question from './Question';
 import { enqueueSnackbar } from 'notistack';
 import Countdown from '../Utility/Countdown';
+import TabChangeNotifier from './TabChangeNotifier';
+import ReportButton from './ReportButton';
 
-const TEST_URL = 'https://repulsive-puce-sombrero.cyclic.app/api/quiz/test/'
+// const TEST_URL = 'https://repulsive-puce-sombrero.cyclic.app/api/quiz/test/'
+const TEST_URL = 'http://localhost:3000/api/quiz/test/'
 
 const Quiz = () => {
     const { isLoggedIn, user } = useAuth();
@@ -150,12 +153,13 @@ const Quiz = () => {
                     autoHideDuration: 3000
                 });
             })
-                .catch(error => console.log(error))
+                .catch(error => console.error(error))
         }, 2500);
     };
 
     return (
         <>
+            <TabChangeNotifier />
             {/* Navbar component */}
             <Navbar />
 
@@ -163,7 +167,7 @@ const Quiz = () => {
             {loading && <LoadingComponent open={loading} />}
 
             {/* Countdown timer */}
-            <Box position="absolute" top={60} right={0} p={2}>
+            <Box sx={{m:1, display: 'flex', justifyContent: 'center'}} >
                 {(!submitted && !isTrainingMode) ? <Countdown timeInMinutes={timeInMinutes} /> : ''} {/* Set the time in minutes */}
             </Box>
 
@@ -183,9 +187,9 @@ const Quiz = () => {
                                 {alert.message}
                             </Alert>
                         )}
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="h5" gutterBottom style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             Question {currentQuestion + 1}
-
+                            <ReportButton questionId={questions[currentQuestion]?.question_id} />
                         </Typography>
                         {questions.length === 0 ? (
                             <LoadingComponent open={true} />
@@ -199,7 +203,7 @@ const Quiz = () => {
                                 />
                                 <Grid container spacing={2} justifyContent='flex-end'>
                                     <Grid item>
-                                        {isTrainingMode == 'true' ? (<>
+                                        {isTrainingMode ? (<>
                                             <Button sx={{ m: 1 }}
                                                 variant="contained"
                                                 color="primary"

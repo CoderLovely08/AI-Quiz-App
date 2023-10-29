@@ -11,6 +11,11 @@ const TestSummary = ({ result }) => {
                         Thank you for submitting the test!
                     </Typography>
                     <Typography variant="body1">
+                        Attempted: {result.questions.reduce((count) => {
+                            return count + 1
+                        }, 0)}
+                    </Typography>
+                    <Typography variant="body1">
                         Score: {result.questions.reduce((count, item) => {
                             return count + item.isCorrect
                         }, 0)}
