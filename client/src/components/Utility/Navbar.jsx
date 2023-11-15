@@ -49,7 +49,7 @@ const Navbar = () => {
             <AppBar position="static" sx={{ backgroundColor: '#00BFA6' }}>
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        <Link to='/' style={{ color: 'white', textDecoration: 'none' }}>Quiz App</Link>
+                        <Link to='/' style={{ color: 'white', textDecoration: 'none' }}>Quiz Buddy</Link>
                     </Typography>
                     {!isLoggedIn ? (
                         <Link to={'/login'}>
