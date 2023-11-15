@@ -12,7 +12,11 @@ import {
 const Question = ({ question, selectedOption, handleOptionChange }) => {
     return (
         <>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" paragraph style={{
+                WebkitUserSelect: 'none',
+                msUserSelect: 'none',
+                userSelect: 'none'
+            }}>
                 {question.question_text}
             </Typography>
             {/* ... Image code ... */}
@@ -24,6 +28,11 @@ const Question = ({ question, selectedOption, handleOptionChange }) => {
                 >
                     {question.options.map((option) => (
                         <FormControlLabel
+                            style={{
+                                WebkitUserSelect: 'none',
+                                msUserSelect: 'none',
+                                userSelect: 'none'
+                            }}
                             key={option.option_id}
                             value={option.option_id}
                             control={<Radio />}
