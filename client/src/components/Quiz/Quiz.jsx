@@ -24,7 +24,6 @@ import ReportButton from './ReportButton';
 import { BASE_URL } from '../service/data';
 
 // const TEST_URL = 'https://repulsive-puce-sombrero.cyclic.app/api/quiz/test/'
-const TEST_URL = 'http://localhost:3000/api/quiz/test/'
 
 const Quiz = () => {
     const { isLoggedIn, user } = useAuth();
@@ -35,6 +34,9 @@ const Quiz = () => {
     useEffect(() => {
         if (!isLoggedIn) {
             navigateTo('/login')
+        }
+        if (tabWarnings > 3) {
+            navigateTo('/')
         }
     }, [isLoggedIn]);
 
@@ -48,7 +50,7 @@ const Quiz = () => {
         finalScore: '',
         questions: []
     });
-    const [alert, setAlert] = useState({
+    const [warningAlert, setAlert] = useState({
         isOpen: false,
         title: '',
         message: '',
@@ -67,9 +69,13 @@ const Quiz = () => {
             .then((response) => {
                 setQuestions(response.data);
             })
-            .catch((error) =>
+            .catch((error) => {
                 console.error('Error fetching questions:', error)
-            );
+                enqueueSnackbar(error.message, {
+                    variant: 'error',
+                    autoHideDuration: 3000
+                });
+            });
     }, []);
 
     const handleOptionChange = (event) => {
@@ -83,7 +89,7 @@ const Quiz = () => {
             setUserResponses(updatedResponses);
             return selectedOptionValue
         });
-        setAlert({ ...alert, isOpen: false });
+        setAlert({ ...warningAlert, isOpen: false });
     };
 
     const handleNext = () => {
@@ -138,7 +144,7 @@ const Quiz = () => {
         setOpen(false);
 
         setTimeout(() => {
-            axios.post(TEST_URL, {
+            axios.post(BASE_URL + '/quiz/test/', {
                 uId: user.uId,
                 responses: userResponsesArray
             }).then(result => {
@@ -154,13 +160,32 @@ const Quiz = () => {
                     autoHideDuration: 3000
                 });
             })
-                .catch(error => console.error(error))
+                .catch(error => {
+                    console.error(error)
+                    enqueueSnackbar(error.message, {
+                        variant: 'error',
+                        autoHideDuration: 3000
+                    });
+                })
         }, 2500);
     };
 
+    const [tabWarnings, setTabWarnings] = useState(0);
+
+    const handleWarningsChange = (newWarnings) => {
+        // Update the warnings value in the parent component
+        setTabWarnings(newWarnings);
+
+    };
+    if (tabWarnings > 3) {
+        alert("You have been disqualified!");
+        window.location.href = '/';
+
+    }
+
     return (
         <>
-            <TabChangeNotifier />
+            <TabChangeNotifier onWarningsChange={handleWarningsChange} />
             {/* Navbar component */}
             <Navbar />
 
@@ -182,10 +207,10 @@ const Quiz = () => {
                 ) : (
                     <CardContent>
                         {/* Alert message */}
-                        {alert.isOpen && (
+                        {warningAlert.isOpen && (
                             <Alert severity="error">
-                                <AlertTitle>{alert.title}</AlertTitle>
-                                {alert.message}
+                                <AlertTitle>{warningAlert.title}</AlertTitle>
+                                {warningAlert.message}
                             </Alert>
                         )}
                         <Typography variant="h5" gutterBottom style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -235,8 +260,8 @@ const Quiz = () => {
                                 </Grid>
                             </>
                         )}
-                    </CardContent>)
-                }
+                    </CardContent>
+                )}
             </Card >
         </>
     );

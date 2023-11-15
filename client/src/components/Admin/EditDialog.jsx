@@ -11,7 +11,7 @@ import {
     MenuItem,
     TextField,
 } from '@mui/material';
-import { DEV_BASE_URL } from '../service/data';
+import { BASE_URL } from '../service/data';
 import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
 import LoadingComponent from '../Utility/Loading';
@@ -35,7 +35,7 @@ const EditDialog = ({ questionData, open, categories, handleClose, updateCategor
         setisLoading(true);
         // Add your save logic here
 
-        axios.put(DEV_BASE_URL + '/quiz/questions', {
+        axios.put(BASE_URL + '/quiz/questions', {
             questionId: questionData.questionId,
             questionText: question,
             categoryId: category
