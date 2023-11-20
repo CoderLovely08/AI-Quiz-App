@@ -39,31 +39,43 @@ const Navbar = () => {
     }
 
     return (
-        <div>
-            <ShowDialog
-                open={open}
-                handleClose={handleClose}
-                handleSubmitTest={handleLogoutClick}
-                message="Are you sure you want to logout?"
-            />
-            <AppBar position="static" sx={{ backgroundColor: '#00BFA6' }}>
-                <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        <Link to='/' style={{ color: 'white', textDecoration: 'none' }}>Quiz Buddy</Link>
-                    </Typography>
-                    {!isLoggedIn ? (
-                        <Link to={'/login'}>
-                            <Button variant="contained">Login</Button>
-                        </Link>
-                    ) : (
-                        <>
-                            <Typography mx={2}>{user?.userName}</Typography>
-                            <Button variant="contained" onClick={handleLogoutUser}>Logout</Button>
-                        </>
-                    )}
-                </Toolbar>
-            </AppBar>
-        </div>
+      <div>
+        <ShowDialog
+          open={open}
+          handleClose={handleClose}
+          handleSubmitTest={handleLogoutClick}
+          message="Are you sure you want to logout?"
+        />
+        <AppBar position="static" sx={{ backgroundColor: "#00BFA6" }}>
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <Link to="/" style={{ color: "white", textDecoration: "none" }}>
+                Quiz Buddy
+              </Link>
+            </Typography>
+            <Typography variant="h6" component="div" sx={{mx: 1}}>
+              <Link
+                to="https://a-ivatar-be-neon.vercel.app"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                AIVATAR
+              </Link>
+            </Typography>
+            {!isLoggedIn ? (
+              <Link to={"/login"}>
+                <Button variant="contained">Login</Button>
+              </Link>
+            ) : (
+              <>
+                <Typography mx={2}>{user?.userName}</Typography>
+                <Button variant="contained" onClick={handleLogoutUser}>
+                  Logout
+                </Button>
+              </>
+            )}
+          </Toolbar>
+        </AppBar>
+      </div>
     );
 }
 
