@@ -1,6 +1,4 @@
 import express from "express";
-import https from 'https'
-import fs from 'fs'
 
 import cors from 'cors'
 import { config } from 'dotenv'
@@ -28,16 +26,7 @@ app.get('/', async (req, res) => {
     }
 })
 
-const server = https.createServer(
-  {
-    key: fs.readFileSync("key.pem"),
-    cert: fs.readFileSync("cert.pem"),
-  },
-  app
-);
-
-
-server.listen(process.env.PORT, (err) => {
+app.listen(process.env.PORT, (err) => {
     if (err) console.log(err);
     console.log(`Server is running on port ${process.env.PORT}`);
 })
