@@ -1,82 +1,82 @@
-import { useState } from 'react';
-import {
-    AppBar,
-    Toolbar,
-    Typography,
-    Button
-} from '@mui/material';
-
-import { signOut, getAuth } from 'firebase/auth';
-import { app } from '../../firebase';
-import { useAuth } from '../Authentication/AuthContext';
-import { ShowDialog } from './ShowDialog';
-import { Link } from 'react-router-dom';
-import { enqueueSnackbar } from 'notistack';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { signOut, getAuth } from "firebase/auth";
+import { app } from "../../firebase";
+import { useAuth } from "../Authentication/AuthContext";
+import { ShowDialog } from "./ShowDialog";
+import { useSnackbar } from "notistack";
+import Button from "./Button";
 
 const Navbar = () => {
-    const { isLoggedIn, user, logout } = useAuth();
-    const auth = getAuth(app);
-    const [open, setOpen] = useState(false);
+  const { isLoggedIn, user, logout } = useAuth();
+  const auth = getAuth(app);
+  const [open, setOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
+  // Logout handler
+  const handleLogoutUser = () => {
+    setOpen(true);
+  };
 
-    // Logout handler
-    const handleLogoutUser = () => {
-        setOpen(true);
-    }
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    const handleClose = () => {
-        setOpen(false);
-    }
+  const handleLogoutClick = async () => {
+    await signOut(auth);
+    logout();
+    setOpen(false);
+    enqueueSnackbar("Logout Successful", {
+      variant: "warning",
+      autoHideDuration: 3000,
+    });
+  };
 
-    const handleLogoutClick = async () => {
-        await signOut(auth);
-        logout();
-        setOpen(false);
-        enqueueSnackbar("Logout Successful", {
-            variant: 'warning',
-            autoHideDuration: 3000
-        });
-    }
-
-    return (
-      <div>
-        <ShowDialog
-          open={open}
-          handleClose={handleClose}
-          handleSubmitTest={handleLogoutClick}
-          message="Are you sure you want to logout?"
-        />
-        <AppBar position="static" sx={{ backgroundColor: "#00BFA6" }}>
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <Link to="/" style={{ color: "white", textDecoration: "none" }}>
-                Quiz Buddy
-              </Link>
-            </Typography>
-            <Typography variant="h6" component="div" sx={{mx: 1}}>
-              <Link
-                to="https://a-ivatar-be-neon.vercel.app"
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                AIVATAR
-              </Link>
-            </Typography>
+  return (
+    <div>
+      <ShowDialog
+        open={open}
+        handleClose={handleClose}
+        handleSubmitTest={handleLogoutClick}
+        message="Are you sure you want to logout?"
+      />
+      <nav className="bg-white p-2 shadow-md rounded-b-md">
+        <div className="container mx-auto flex justify-between items-center">
+          <Link to="/" className="text-teal-500 text-2xl font-bold">
+            Quiz Buddy
+          </Link>
+          <div className="flex items-center gap-1">
+            <Link
+              to="https://a-ivatar-be-neon.vercel.app"
+              className="text-white"
+            >
+              <h1 className="text-teal-500 text-xl font-bold">AIVATAR</h1>
+            </Link>
             {!isLoggedIn ? (
-              <Link to={"/login"}>
-                <Button variant="contained">Login</Button>
-              </Link>
+              <div className="flex gap-1">
+                <Link to="/login" className="text-white">
+                  <Button label={"Login"} />
+                </Link>
+                <Link to="/register" className="text-white">
+                  <Button label={"Register"} variant={"contained"} />
+                </Link>
+              </div>
             ) : (
               <>
-                <Typography mx={2}>{user?.userName}</Typography>
-                <Button variant="contained" onClick={handleLogoutUser}>
+                <span className="text-white mx-2">{user?.userName}</span>
+                <button
+                  onClick={handleLogoutUser}
+                  className="bg-white text-teal-500 px-4 py-2 rounded"
+                >
                   Logout
-                </Button>
+                </button>
               </>
             )}
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-}
+          </div>
+        </div>
+      </nav>
+    </div>
+  );
+};
 
 export default Navbar;
