@@ -46,13 +46,7 @@ const LoginPage = () => {
     }, []);
 
     const { login } = useAuth();
-    // Redirect if the user is logged in
-    // onAuthStateChanged(auth, (user) => {
-    //     if (user) {
-    //         login({ userName: user.displayName, userEmail: user.email, uId: user.uid });
-    //         navigateTo('/')
-    //     }
-    // });
+
 
     const navigateTo = useNavigate();
 
@@ -142,8 +136,6 @@ const LoginPage = () => {
                                         Admin Login
                                     </Button>
                                 </Link>
-
-
                             </CardContent>
                         </Grid>
                     </Grid>

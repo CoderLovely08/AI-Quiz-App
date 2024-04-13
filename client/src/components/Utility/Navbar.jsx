@@ -47,7 +47,7 @@ const Navbar = () => {
           </Link>
           <div className="flex items-center gap-1">
             <Link
-              to="https://a-ivatar-be-neon.vercel.app"
+              to="https://aivatarg3.vercel.app/"
               className="text-white"
             >
               <h1 className="text-teal-500 text-xl font-bold">AIVATAR</h1>
@@ -63,7 +63,7 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-                <span className="text-white mx-2">{user?.userName}</span>
+                <span className="text-teal-500 bg-white px-2 py-1 border border-teal-500 rounded mx-2">{user?.userName}</span>
                 <button
                   onClick={handleLogoutUser}
                   className="bg-white text-teal-500 px-4 py-2 rounded"
