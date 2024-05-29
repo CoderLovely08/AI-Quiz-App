@@ -61,7 +61,12 @@ const RegistrationPage = () => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode, errorMessage);
-                // ..
+                if (errorCode === 'auth/email-already-in-use') {
+                    enqueueSnackbar("Email already in use", {
+                        variant: 'error',
+                        autoHideDuration: 3000
+                    });
+                }
             });
     }
 

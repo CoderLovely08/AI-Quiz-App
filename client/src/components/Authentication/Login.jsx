@@ -1,4 +1,4 @@
-import { getAuth, GoogleAuthProvider, GithubAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, GithubAuthProvider, onAuthStateChanged, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 import { app } from "../../firebase";
@@ -33,6 +33,8 @@ const auth = getAuth(app);
 const LoginPage = () => {
 
     const [open, setOpen] = useState(true);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
@@ -70,12 +72,49 @@ const LoginPage = () => {
             });
         })
     }
+
+    const handleUserLogin = (e) => {
+        e.preventDefault();
+        // handle email and password login 
+        signInWithEmailAndPassword(auth, email, password).then((result) => {
+            login({ userName: result.user.displayName, userEmail: result.user.email, uId: result.user.uid });
+            enqueueSnackbar("Login Successful", {
+                variant: 'success',
+                autoHideDuration: 3000
+            });
+            setOpen(true);
+        })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+                if (errorCode === 'auth/user-not-found') {
+                    enqueueSnackbar("User not found", {
+                        variant: 'error',
+                        autoHideDuration: 3000
+                    });
+
+                } else if (errorCode === 'auth/wrong-password') {
+                    enqueueSnackbar("Incorrect Password", {
+                        variant: 'error',
+                        autoHideDuration: 3000
+                    });
+
+                } else {
+                    enqueueSnackbar("Invalid Credentials", {
+                        variant: 'error',
+                        autoHideDuration: 3000
+                    });
+                }
+            });
+    }
+
+    if (open) {
+        return <LoadingComponent open={open} />
+    }
+
     return (
         <>
-            {/* Loading */}
-
-            {open && <LoadingComponent open={open} />}
-
             {/* Navbar */}
             <Navbar />
             <Container sx={{ mt: 4 }}>
@@ -97,6 +136,7 @@ const LoginPage = () => {
                                         margin="normal"
                                         required
                                         type="email"
+                                        onChange={(e) => setEmail(e.target.value)}
                                     />
                                     <TextField
                                         label="Password"
@@ -105,11 +145,13 @@ const LoginPage = () => {
                                         margin="normal"
                                         required
                                         type="password"
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                     <Typography variant="body1" textAlign="left" style={{ fontSize: '12px' }}>
                                         <Link to="/forgot-password">Forgot Password?</Link>
                                     </Typography>
-                                    <Button variant="contained" color="primary" fullWidth type="submit" sx={{ mt: 2 }}>
+                                    <Button variant="contained" color="primary" fullWidth type="submit" sx={{ mt: 2 }}
+                                        onClick={handleUserLogin}>
                                         Login
                                     </Button>
                                 </form>

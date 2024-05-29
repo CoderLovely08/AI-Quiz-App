@@ -8,6 +8,7 @@ import Quiz from "./components/Quiz/Quiz";
 import TestSummary from "./components/Quiz/TestSummary";
 import TestingModeLanding from "./components/TrainingMode/TestingModeLanding";
 import TrainingModeLanding from "./components/TrainingMode/TrainingModeLanding";
+import PrivateRoute from "./components/Utility/ProtectedRoute";
 
 function App() {
   return (
@@ -17,10 +18,13 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/training-test" element={<TrainingModeLanding />}></Route>
-          <Route path="/quiz" element={<Quiz />}></Route>
-          <Route path="/summary" element={<TestSummary />}></Route>
-          <Route path="/testing-test" element={<TestingModeLanding />}></Route>
+          {/* Protected Routes */}
+          <Route element={<PrivateRoute />}>
+            <Route path="/training-test" element={<TrainingModeLanding />} />
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/summary" element={<TestSummary />} />
+            <Route path="/testing-test" element={<TestingModeLanding />} />
+          </Route>
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin/home" element={<AdminHomePage />} />
