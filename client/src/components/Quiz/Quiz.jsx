@@ -187,7 +187,6 @@ const Quiz = () => {
         <>
             <TabChangeNotifier onWarningsChange={handleWarningsChange} />
             {/* Navbar component */}
-            <Navbar />
 
             {/* Loading component */}
             {loading && <LoadingComponent open={loading} />}

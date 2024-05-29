@@ -9,17 +9,38 @@ import TestSummary from "./components/Quiz/TestSummary";
 import TestingModeLanding from "./components/TrainingMode/TestingModeLanding";
 import TrainingModeLanding from "./components/TrainingMode/TrainingModeLanding";
 import PrivateRoute from "./components/Utility/ProtectedRoute";
+import Home from "./pages/main/Home";
+import Navbar from "./components/Utility/Navbar";
+import Interview from "./pages/main/Interview";
+import About from "./pages/main/About";
+import Instruction from "./pages/main/Instruction";
+import Videoplayer from "./pages/main/Videoplayer";
+import SubmitComponent from "./pages/main/SubmitComponent";
 
 function App() {
   return (
     <>
       <Router>
+      <Navbar />
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          
+          {/* Interview Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path='/interview' element={<Interview />}></Route>
+          <Route path='/about' element={<About />}></Route>
+          {/* <Route element={<PrivateRoute />}>
+            
+          </Route> */}
+          
+          {/* Quiz Routes */}
+          <Route path="/aptitude" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           {/* Protected Routes */}
           <Route element={<PrivateRoute />}>
+            <Route path='/instructions' element={<Instruction />} />
+            <Route path='/maininterview' element={<Videoplayer />} />
+            <Route path='/submit' element={<SubmitComponent />} />
             <Route path="/training-test" element={<TrainingModeLanding />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/summary" element={<TestSummary />} />

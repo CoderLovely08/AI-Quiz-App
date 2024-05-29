@@ -4,14 +4,17 @@ import { AdminAuthProvider } from './components/Admin/AdminAuthContext.jsx';
 import { AuthProvider } from './components/Authentication/AuthContext';
 import { SnackbarProvider } from 'notistack'
 import "./index.css";
+import { QAProvider } from './context/QAContext.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AdminAuthProvider>
     <AuthProvider>
-      <SnackbarProvider>
-        <App />
-      </SnackbarProvider>
+      <QAProvider>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </QAProvider>
     </AuthProvider>
   </AdminAuthProvider>
 )

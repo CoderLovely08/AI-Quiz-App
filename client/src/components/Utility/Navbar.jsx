@@ -43,14 +43,14 @@ const Navbar = () => {
       <nav className="bg-white p-2 shadow-md rounded-b-md">
         <div className="container mx-auto flex justify-between items-center">
           <Link to="/" className="text-teal-500 text-2xl font-bold">
-            Quiz Buddy
+            Aivatar
           </Link>
           <div className="flex items-center gap-1">
             <Link
               to="https://aivatarg3.vercel.app/"
               className="text-white"
             >
-              <h1 className="text-teal-500 text-xl font-bold">AIVATAR</h1>
+              {/* <h1 className="text-teal-500 text-xl font-bold">AIVATAR</h1> */}
             </Link>
             {!isLoggedIn ? (
               <div className="flex gap-1">

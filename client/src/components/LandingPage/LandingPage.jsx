@@ -36,8 +36,6 @@ const LandingPage = () => {
 
     return (
         <div>
-            {/* App Bar */}
-            <Navbar />
 
             {/* Hero Section */}
             <Container sx={{ p: 2, mt: 4 }}>

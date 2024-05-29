@@ -29,8 +29,6 @@ const TrainingModeLanding = () => {
 
     return (
         <>
-            {/* Navbar */}
-            <Navbar></Navbar>
 
             <Container sx={{ mt: 4 }}>
                 <Card variant="outlined">

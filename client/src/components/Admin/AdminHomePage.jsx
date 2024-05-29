@@ -20,7 +20,6 @@ const AdminHomePage = () => {
 
     return (
         <div>
-            <Navbar />
             <Container sx={{ p: 2, mt: 4 }}>
                 <h1>Welcome <strong>{user?.userName}</strong></h1>
                 <p>Here you can manage various admin-related tasks.</p>

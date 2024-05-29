@@ -25,8 +25,6 @@ const TestingModeLanding = () => {
 
     return (
         <>
-            {/* Navbar */}
-            <Navbar />
 
             <Container sx={{ mt: 4 }}>
                 <Card variant="outlined">
