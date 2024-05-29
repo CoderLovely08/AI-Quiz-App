@@ -39,7 +39,7 @@ function ScreenRecorder({ setResponseObject, questionId, questionText, jobRole }
           }));
       
           // Now that we have the transcription data, let's fetch it
-          fetchData();
+          // fetchData();
         } catch (error) {
           console.error("Error sending audio:", error);
         }

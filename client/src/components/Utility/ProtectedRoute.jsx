@@ -6,6 +6,7 @@ import LoadingComponent from './Loading';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { app } from '../../firebase';
+import { enqueueSnackbar } from 'notistack';
 
 const auth = getAuth(app);
 
@@ -13,8 +14,19 @@ const auth = getAuth(app);
 
 const PrivateRoute = () => {
     const [loading, setLoading] = useState(true);
-    const { login } = useAuth();
+    const { login, isLoggedIn } = useAuth();
     const currentUser = useAuth();
+    const navigateTo = useNavigate();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            enqueueSnackbar("Kidnly login to take a test", {
+                variant: 'info',
+                autoHideDuration: 2000
+            });
+            navigateTo('/login')
+        }
+    }, [isLoggedIn]);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
