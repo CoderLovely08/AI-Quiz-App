@@ -90,7 +90,6 @@ const AdminLoginPage = () => {
     return (
         <>
             {loading && <LoadingComponent open={loading} />} {/* Use the LoadingComponent */}
-            <Navbar />
             <Container sx={{ mt: 4 }}>
                 <Card variant='outlined'>
                     <Grid container spacing={2}>

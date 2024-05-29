@@ -1,134 +1,87 @@
 import React, { useContext, useState } from "react";
-import {
-  Card,
-  Container,
-  CardContent,
-  CardMedia,
-  Button,
-  Select,
-  Typography,
-  Grid,
-  FormControl,
-  InputLabel,
-  MenuItem,
-} from "@mui/material";
 import { Link, useNavigate } from 'react-router-dom';
 import QAContext from "../../context/QAContext";
 
-
+// Icons (Using Heroicons for this example)
+// import { CodeIcon, CalculatorIcon } from '@heroicons/react/solid';
 
 const Interview = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const navigateTo = useNavigate();
   const { updateRole } = useContext(QAContext);
-  
 
   const handleOptionChange = (e) => {
     const newRole = e.target.value;
     setSelectedOption(newRole);
-    updateRole(newRole); // Update the role in the context
+    updateRole(newRole);
     navigateTo('/instructions');
-
   };
 
   return (
-    <>
-      <Container>
-        <Card contain sx={{ p: 2, my: 3, marginTop:"80px" }}>
-          <Typography variant="h4" sx={{ my: 3, textAlign: "center" }}>
-            Interview Preparation
-          </Typography>
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="stretch" 
-            spacing={5}
-          >
-            <Grid item xs={12} md={6}>
-              <Card sx={{ minWidth: 345 }}>
-                <CardMedia
-                  sx={{ height: 140 }}
-                  image="https://i.postimg.cc/XYVCJQxK/inter.jpg"
-                  alt="Interview Role 1"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {"Selected Role: " + selectedOption || "Select Role"}
-                  </Typography>
-                  <FormControl fullWidth>
-                    <InputLabel id="role-select-label">
-                      Select Role
-                    </InputLabel>
-                    <Select
-                      labelId="role-select-label"
-                      id="role-select"
-                      value={selectedOption}
-                      label="Select Role"
-                      onChange={handleOptionChange}
-                    >
-                      <MenuItem value="Software Engineer">
-                        Software Engineer
-                      </MenuItem>
-                      <MenuItem value="Web Developer">Web Developer</MenuItem>
-                      <MenuItem value="Android Developer">
-                        Android Developer
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                  {selectedOption && (
-                    <Grid container justifyContent="center" marginTop={2}>
-                      <Button
-                        variant="contained"
-                        onClick={() =>
-                          alert("Start button clicked for Role 1")
-                        }
-                      >
-                        Start
-                      </Button>
-                    </Grid>
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Card sx={{ minWidth: 345 }}>
-                <CardMedia
-                  sx={{ height: 140 }}
-                  image="https://i.postimg.cc/9FfvPjxr/images.png"
-                  alt="Interview Role 2"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Aptitude Preparation
-                  </Typography>
-                  <Grid container direction="column" justifyContent="center">
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      Sharpen your numerical abilities with our Aptitude Test.
-                      This test covers various topics to help you excel in
-                      interviews.
-                    </Typography>
-                    <Button
-                      variant="contained"
-                    >
-                      <Link
-                        to={"/aptitude"}
-                        style={{
-                          textDecoration: "none",
-                          color: "inherit",
-                        }}
-                      >
-                        Aptitude Test
-                      </Link>
-                    </Button>
-                  </Grid>
-                  
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Card>
-      </Container>
-    </>
+    <div className="min-h-screen bg-gradient-to-br from-grey-100 to-blue-50 py-12 px-4">
+      <div className="container mx-auto max-w-4xl"> {/* Container for content */}
+        <h2 className="text-3xl font-bold text-center text-teal-600 mb-8">Get Interview Ready</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Role-Specific Prep Card */}
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="relative">
+              <img
+                src="https://i.postimg.cc/XYVCJQxK/inter.jpg"
+                alt="Technical Interview Prep"
+                className="w-full h-48 object-cover"
+              />
+              {/* <CodeIcon className="absolute top-4 right-4 h-12 w-12 text-white" /> */}
+            </div>
+            <div className="p-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">Technical Interview Practice</h3>
+              <p className="text-gray-600 mb-4">Hone your skills with role-specific questions and challenges.</p>
+
+              {/* Role Selection Dropdown */}
+              <select
+                value={selectedOption}
+                onChange={handleOptionChange}
+                className="w-full px-4 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring focus:border-teal-500"
+              >
+                <option value="" disabled>Select Role</option>
+                <option value="Software Engineer">Software Engineer</option>
+                <option value="Web Developer">Web Developer</option>
+                <option value="Android Developer">Android Developer</option>
+              </select>
+
+              {selectedOption && (
+                <Link to="/training-test" className="block mt-4">
+                  <button className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                    Start Practice
+                  </button>
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {/* Aptitude Test Card */}
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="relative">
+              <img
+                src="https://i.postimg.cc/9FfvPjxr/images.png"
+                alt="Aptitude Test"
+                className="w-full h-48 object-cover"
+              />
+              {/* <CalculatorIcon className="absolute top-4 right-4 h-12 w-12 text-white" /> */}
+            </div>
+            <div className="p-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">Aptitude Assessment</h3>
+              <p className="text-gray-600 mb-4">Evaluate your problem-solving and logical reasoning abilities.</p>
+              <Link to="/aptitude">
+                <button className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                  Take the Test
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
